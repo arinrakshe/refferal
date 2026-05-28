@@ -5,3 +5,5 @@ __pycache__/
 filename.zip
 .sixth/
 hackathon-files/__MACOSX/
+synthea/sample.zip
+.DS_Store
