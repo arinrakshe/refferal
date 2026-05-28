@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referral Ready — athenahealth AI Hackathon</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --athena-green: #00a651;
+    --athena-dark-green: #007a3d;
+    --athena-light-green: #e6f7ee;
+    --athena-navy: #1a2b4a;
+    --athena-blue: #0057a8;
+    --athena-light-blue: #e8f0fb;
+    --athena-gray: #f4f5f7;
+    --athena-mid-gray: #6b7280;
+    --athena-border: #e2e5ea;
+    --white: #ffffff;
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --accent-orange: #f59e0b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--text-primary);
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--athena-border);
+    padding: 0 48px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .athena-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--athena-dark-green);
+    text-decoration: none;
+  }
+
+  .athena-logo .leaf {
+    width: 28px;
+    height: 28px;
+  }
+
+  .nav-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--athena-border);
+  }
+
+  .nav-label {
+    font-size: 13px;
+    color: var(--athena-mid-gray);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-badge {
+    background: var(--athena-light-green);
+    color: var(--athena-dark-green);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .btn-demo {
+    background: var(--athena-green);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .btn-demo:hover { background: var(--athena-dark-green); }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--athena-navy) 0%, #0d3d6e 60%, #0a5c3a 100%);
+    padding: 80px 48px 72px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,166,81,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 30%;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(0,87,168,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .eyebrow-tag {
+    background: rgba(0,166,81,0.2);
+    color: #4ade80;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: 1px solid rgba(0,166,81,0.3);
+  }
+
+  .eyebrow-dot {
+    color: rgba(255,255,255,0.3);
+    font-size: 12px;
+  }
+
+  .eyebrow-track {
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .hero h1 {
+    font-size: 56px;
+    font-weight: 700;
+    color: white;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero h1 span {
+    color: #4ade80;
+  }
+
+  .hero-subtitle {
+    font-size: 20px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 400;
+    margin-bottom: 48px;
+    max-width: 560px;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat-number {
+    font-size: 36px;
+    font-weight: 700;
+    color: white;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .stat-number span {
+    color: #4ade80;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .stat-divider {
+    width: 1px;
+    background: rgba(255,255,255,0.1);
+    align-self: stretch;
+  }
+
+  /* MAIN CONTENT */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+
+  /* PROBLEM STATEMENT */
+  .problem-section {
+    padding: 72px 48px;
+    background: var(--white);
+  }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--athena-green);
+    margin-bottom: 16px;
+  }
+
+  .problem-card {
+    background: var(--athena-navy);
+    border-radius: 16px;
+    padding: 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .problem-card::before {
+    content: '"';
+    position: absolute;
+    top: -20px; left: 32px;
+    font-size: 200px;
+    color: rgba(0,166,81,0.08);
+    font-family: Georgia, serif;
+    line-height: 1;
+  }
+
+  .problem-card p {
+    font-size: 22px;
+    color: white;
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 800px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .problem-card p strong {
+    color: #4ade80;
+    font-weight: 600;
+  }
+
+  .problem-meta {
+    display: flex;
+    gap: 32px;
+    margin-top: 32px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+    z-index: 1;
+  }
+
+  .problem-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .problem-meta-item .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.4);
+    font-weight: 600;
+  }
+
+  .problem-meta-item .value {
+    font-size: 15px;
+    color: rgba(255,255,255,0.85);
+    font-weight: 500;
+  }
+
+  /* THREE COLUMNS */
+  .three-col {
+    padding: 72px 48px;
+    background: var(--athena-gray);
+  }
+
+  .three-col-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    margin-bottom: 40px;
+  }
+
+  .section-header h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    border: 1px solid var(--athena-border);
+  }
+
+  .card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 20px;
+  }
+
+  .card-icon.green { background: var(--athena-light-green); }
+  .card-icon.blue { background: var(--athena-light-blue); }
+  .card-icon.orange { background: #fef3c7; }
+
+  .card h3 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+
+  .card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* HOW IT WORKS */
+  .how-section {
+    padding: 72px 48px;
+    background: white;
+  }
+
+  .how-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .workflow {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    margin-top: 40px;
+    align-items: start;
+  }
+
+  .workflow-col h3 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--athena-border);
+  }
+
+  .workflow-col.before h3 { color: #dc2626; border-color: #fecaca; }
+  .workflow-col.after h3 { color: var(--athena-dark-green); border-color: var(--athena-light-green); }
+
+  .workflow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--athena-border);
+  }
+
+  .workflow-step:last-child { border-bottom: none; }
+
+  .step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .before .step-num { background: #fee2e2; color: #dc2626; }
+  .after .step-num { background: var(--athena-light-green); color: var(--athena-dark-green); }
+
+  .step-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .step-text strong {
+    color: var(--text-primary);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .workflow-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 32px;
+    padding-top: 52px;
+  }
+
+  .arrow-line {
+    width: 2px;
+    height: 40px;
+    background: linear-gradient(to bottom, #dc2626, var(--athena-green));
+  }
+
+  .arrow-badge {
+    background: var(--athena-navy);
+    color: white;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .arrow-line-bottom {
+    width: 2px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--athena-green), var(--athena-dark-green));
+  }
+
+  /* AI SECTION */
+  .ai-section {
+    padding: 72px 48px;
+    background: var(--athena-gray);
+  }
+
+  .ai-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .ai-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 40px;
+    align-items: start;
+  }
+
+  .ai-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .ai-step {
+    display: flex;
+    gap: 20px;
+    position: relative;
+  }
+
+  .ai-step-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .ai-step-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--athena-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .ai-step-line {
+    width: 2px;
+    flex: 1;
+    background: var(--athena-border);
+    margin: 4px 0;
+    min-height: 24px;
+  }
+
+  .ai-step:last-child .ai-step-line { display: none; }
+
+  .ai-step-content {
+    padding-bottom: 28px;
+    padding-top: 6px;
+  }
+
+  .ai-step-content h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+
+  .ai-step-content p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .ai-step-content .mono {
+    font-family: 'DM Mono', monospace;
+    background: white;
+    border: 1px solid var(--athena-border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--athena-blue);
+    margin-top: 8px;
+    display: block;
+  }
+
+  /* DATA SECTION */
+  .data-section {
+    padding: 72px 48px;
+    background: white;
+  }
+
+  .data-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .data-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 40px;
+  }
+
+  .data-card {
+    background: var(--athena-gray);
+    border-radius: 10px;
+    padding: 24px;
+    border: 1px solid var(--athena-border);
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .data-card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--athena-light-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .data-card-content h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+
+  .data-card-content p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .data-card-content .tag {
+    display: inline-block;
+    background: var(--athena-light-blue);
+    color: var(--athena-blue);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 8px;
+    letter-spacing: 0.04em;
+  }
+
+  /* OUTCOMES */
+  .outcomes-section {
+    padding: 72px 48px;
+    background: var(--athena-navy);
+  }
+
+  .outcomes-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .outcomes-inner .section-label {
+    color: #4ade80;
+  }
+
+  .outcomes-inner h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.02em;
+    margin-bottom: 40px;
+  }
+
+  .outcomes-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+
+  .outcome-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 28px 24px;
+  }
+
+  .outcome-number {
+    font-size: 40px;
+    font-weight: 700;
+    color: #4ade80;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .outcome-label {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.4;
+  }
+
+  /* TRUST */
+  .trust-section {
+    padding: 72px 48px;
+    background: white;
+  }
+
+  .trust-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .trust-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 40px;
+  }
+
+  .trust-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .trust-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--athena-light-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .trust-text h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+
+  .trust-text p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* CTA */
+  .cta-section {
+    padding: 64px 48px;
+    background: var(--athena-light-green);
+    border-top: 1px solid #bbf7d0;
+  }
+
+  .cta-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+  }
+
+  .cta-text h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--athena-navy);
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .cta-text p {
+    font-size: 16px;
+    color: var(--athena-mid-gray);
+  }
+
+  .cta-btn {
+    background: var(--athena-green);
+    color: white;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.2s, transform 0.1s;
+    display: inline-block;
+  }
+
+  .cta-btn:hover {
+    background: var(--athena-dark-green);
+    transform: translateY(-1px);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--athena-navy);
+    padding: 32px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  footer .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  footer .footer-text {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  footer .footer-right {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .green-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--athena-green);
+    display: inline-block;
+    margin-right: 6px;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-content { animation: fadeUp 0.6s ease both; }
+  .problem-card { animation: fadeUp 0.6s 0.1s ease both; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <a class="athena-logo" href="#">
+      <svg class="leaf" viewBox="0 0 28 28" fill="none">
+        <path d="M14 4C14 4 6 8 6 16C6 20.4 9.6 24 14 24C18.4 24 22 20.4 22 16C22 8 14 4 14 4Z" fill="#00a651"/>
+        <path d="M14 24V12" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      athenahealth
+    </a>
+    <div class="nav-divider"></div>
+    <span class="nav-label">AI Hackathon · BOS Tech Week 2026</span>
+  </div>
+  <div class="nav-right">
+    <span class="nav-badge">Track 3 · Reduce Admin Burden</span>
+    <a href="http://127.0.0.1:8000" class="btn-demo">View Live Demo →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-tag">Hackathon Project</span>
+      <span class="eyebrow-dot">·</span>
+      <span class="eyebrow-track">Reduce Administrative Burden</span>
+    </div>
+    <h1>Referral <span>Ready</span></h1>
+    <p class="hero-subtitle">An AI intake agent that transforms incomplete, unstructured referrals into schedule-ready actions — in seconds, not hours.</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-number">15–<span>30</span>min</span>
+        <span class="stat-label">Manual review time today</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-number"><span>&lt;30</span>sec</span>
+        <span class="stat-label">With Referral Ready</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-number"><span>3–5</span>x</span>
+        <span class="stat-label">More referrals per coordinator</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem-section">
+  <div class="container">
+    <div class="section-label">The Problem</div>
+    <div class="problem-card">
+      <p>Referral coordinators spend <strong>15–30 minutes per referral</strong> manually answering three questions: Is this schedulable? What's missing? What do I do next? Multiply that across dozens of daily referrals and you get bottlenecks, delays, and patients who fall through the cracks.</p>
+      <div class="problem-meta">
+        <div class="problem-meta-item">
+          <span class="label">Primary User</span>
+          <span class="value">Referral Coordinator / Admin Staff</span>
+        </div>
+        <div class="problem-meta-item">
+          <span class="label">Setting</span>
+          <span class="value">Specialist Practice on athenahealth</span>
+        </div>
+        <div class="problem-meta-item">
+          <span class="label">Root Cause</span>
+          <span class="value">Unstructured, incomplete incoming referrals</span>
+        </div>
+        <div class="problem-meta-item">
+          <span class="label">Impact</span>
+          <span class="value">Bottlenecks, leakage, delayed care</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT WE BUILT -->
+<section class="three-col">
+  <div class="three-col-inner">
+    <div class="section-header">
+      <div class="section-label">What We Built</div>
+      <h2>Five outputs. One agent. Zero manual triaging.</h2>
+    </div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-icon green">📊</div>
+        <h3>Readiness Score</h3>
+        <p>Classifies every referral as Ready to Schedule, Missing Information, Needs Authorization, or Needs Clinical Review — instantly.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon orange">⚠️</div>
+        <h3>Missing Info Detection</h3>
+        <p>Automatically flags what's absent — diagnosis codes, imaging, insurance, referring NPI, patient contact — before it reaches a coordinator's queue.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon blue">🏥</div>
+        <h3>Specialty Routing</h3>
+        <p>Recommends the right specialty and explains why — "Likely cardiology, imaging required before scheduling" — so nothing lands in the wrong queue.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon green">✉️</div>
+        <h3>Outreach Draft</h3>
+        <p>Generates an editable follow-up message to the referring office requesting missing information. Human-reviewed before sending.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon orange">🚨</div>
+        <h3>Urgency Flagging</h3>
+        <p>Identifies Routine vs. Urgent vs. Stat referrals so coordinators prioritize their day correctly — not by gut feel.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon blue">📋</div>
+        <h3>Human Approval Checklist</h3>
+        <p>Every AI recommendation requires coordinator sign-off before action. Built-in transparency and accountability at every step.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ATHENAONE CURRENT WORKFLOW -->
+<section style="padding:72px 48px;background:white;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-label">Current State — athenaOne Today</div>
+    <h2 style="font-size:32px;font-weight:700;letter-spacing:-0.02em;margin-bottom:8px;">The existing referral workflow</h2>
+    <p style="color:var(--text-secondary);font-size:15px;margin-bottom:40px;">athenaOne handles routing and authorization well — but the <strong style="color:#dc2626;">manual triage gap</strong> before the workflow even starts costs coordinators 15–30 min per referral. Click any step to see the pain point.</p>
+
+    <!-- Interactive flow -->
+    <div style="position:relative;">
+
+      <!-- Toggle buttons -->
+      <div style="display:flex;gap:12px;margin-bottom:32px;">
+        <button onclick="showView('current')" id="btn-current" style="padding:10px 20px;border-radius:6px;border:2px solid var(--athena-navy);background:var(--athena-navy);color:white;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">Current athenaOne Flow</button>
+        <button onclick="showView('gap')" id="btn-gap" style="padding:10px 20px;border-radius:6px;border:2px solid #dc2626;background:white;color:#dc2626;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">⚠️ Show Pain Points</button>
+      </div>
+
+      <!-- Flow diagram -->
+      <div style="display:flex;gap:0;overflow-x:auto;padding-bottom:16px;">
+
+        <!-- PHASE 1 -->
+        <div class="flow-phase" style="flex:1;min-width:160px;">
+          <div style="background:var(--athena-navy);color:white;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:8px 12px;border-radius:8px 8px 0 0;text-align:center;">Intake</div>
+          <div style="border:1px solid var(--athena-border);border-top:none;border-radius:0 0 8px 8px;overflow:hidden;">
+            <div class="flow-node" onclick="selectNode('n1')" id="n1" style="padding:14px;cursor:pointer;border-bottom:1px solid var(--athena-border);transition:background 0.15s;">
+              <div style="font-size:13px;font-weight:600;color:var(--text-primary);">📨 Referral arrives</div>
+              <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">Fax, portal, direct message, order</div>
+            </div>
+            <div class="flow-node" onclick="selectNode('n2')" id="n2" style="padding:14px;cursor:pointer;border-bottom:1px solid var(--athena-border);transition:background 0.15s;">
+              <div style="font-size:13px;font-weight:600;color:var(--text-primary);">🏥 athenaOne intake</div>
+              <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">Document/order intake system</div>
+            </div>
+            <div class="flow-node" onclick="selectNode('n3')" id="n3" style="padding:14px;cursor:pointer;transition:background 0.15s;">
+              <div style="font-size:13px;font-weight:600;color:var(--text-primary);">👤 Patient matched?</div>
+              <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">Match or create + get demographics</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;padding:0 6px;color:var(--athena-border);font-size:20px;flex-shrink:0;">→</div>
+
+        <!-- PHASE 2 -->
+        <div class="flow-phase" style="flex:1;min-width:160px;">
+          <div style="background:#b45309;color:white;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:8px 12px;border-radius:8px 8px 0 0;text-align:center;">⚠️ Manual Triage</div>
+          <div style="border:1px solid var(--athena-border);border-top:none;border-radius:0 0 8px 8px;overflow:hidden;">
+            <div class="flow-node pain-node" onclick="selectNode('n4')" id="n4" style="padding:14px;cursor:pointer;border-bottom:1px solid var(--athena-border);transition:background 0.15s;background:#fffbeb;">
+              <div style="font-size:13px;font-weight:600;color:#92400e;">📋 Readiness review</div>
+              <div style="font-size:11px;color:#b45309;margin-top:4px;">Manual — 15–30 min per referral</div>
+            </div>
+            <div class="flow-node pain-node" onclick="selectNode('n5')" id="n5" style="padding:14px;cursor:pointer;border-bottom:1px solid var(--athena-border);transition:background 0.15s;background:#fffbeb;">
+              <div style="font-size:13px;font-weight:600;color:#92400e;">❓ Complete packet?</div>
+              <div style="font-size:11px;color:#b45309;margin-top:4px;">No structured check — coordinator guesses</div>
+            </div>
+            <div class="flow-node pain-node" onclick="selectNode('n6')" id="n6" style="padding:14px;cursor:pointer;transition:background 0.15s;background:#fffbeb;">
+              <div style="font-size:13px;font-weight:600;color:#92400e;">📞 Outreach loop</div>
+              <div style="font-size:11px;color:#b45309;margin-top:4px;">Back-and-forth with referring office</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;padding:0 6px;color:var(--athena-border);font-size:20px;flex-shrink:0;">→</div>
+
+        <!-- PHASE 3 -->
+        <div class="flow-phase" style="flex:1;min-width:160px;">
+          <div style="background:#0057a8;color:white;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:8px 12px;border-radius:8px 8px 0 0;text-align:center;">Authorization</div>
+          <div style="border:1px solid var(--athena-border);border-top:none;border-radius:0 0 8px 8px;overflow:hidden;">
+            <div class="flow-node" onclick="selectNode('n7')" id="n7" style="padding:14px;cursor:pointer;border-bottom:1px solid var(--athena-border);transition:background 0.15s;">
+              <div style="font-size:13px;font-weight:600;color:var(--text-primary);">🔍 Auth needed?</div>
+              <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">Auth Determination Engine checks payer/service rules</div>
+            </div>
+            <div class="flow-node" onclick="selectNode('n8')" id="n8" style="padding:14px;cursor:pointer;border-bottom:1px solid var(--athena-border);transition:background 0.15s;">
+              <div style="font-size:13px;font-weight:600;color:var(--text-primary);">📤 Submit to payer</div>
+              <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">Auth Worklist / Tracker → documentation submitted</div>
+            </div>
+            <div class="flow-node" onclick="selectNode('n9')" id="n9" style="padding:14px;cursor:pointer;transition:background 0.15s;">
+              <div style="font-size:13px;font-weight:600;color:var(--text-primary);">⚖️ Payer decision</div>
+              <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">Approved / Denied / More info needed</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;padding:0 6px;color:var(--athena-border);font-size:20px;flex-shrink:0;">→</div>
+
+        <!-- PHASE 4 -->
+        <div class="flow-phase" style="flex:1;min-width:160px;">
+          <div style="background:var(--athena-dark-green);color:white;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:8px 12px;border-radius:8px 8px 0 0;text-align:center;">Schedule</div>
+          <div style="border:1px solid var(--athena-border);border-top:none;border-radius:0 0 8px 8px;overflow:hidden;">
+            <div class="flow-node" onclick="selectNode('n10')" id="n10" style="padding:14px;cursor:pointer;border-bottom:1px solid var(--athena-border);transition:background 0.15s;">
+              <div style="font-size:13px;font-weight:600;color:var(--text-primary);">✅ Auth stored</div>
+              <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">Auth number, dates, visits/units saved</div>
+            </div>
+            <div class="flow-node" onclick="selectNode('n11')" id="n11" style="padding:14px;cursor:pointer;border-bottom:1px solid var(--athena-border);transition:background 0.15s;">
+              <div style="font-size:13px;font-weight:600;color:var(--text-primary);">📅 Ready to schedule</div>
+              <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">Specialist visit booked</div>
+            </div>
+            <div class="flow-node" onclick="selectNode('n12')" id="n12" style="padding:14px;cursor:pointer;transition:background 0.15s;">
+              <div style="font-size:13px;font-weight:600;color:var(--text-primary);">🏁 Appointment</div>
+              <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;">Encounter / claim workflow begins</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detail panel -->
+      <div id="detail-panel" style="margin-top:24px;background:var(--athena-gray);border-radius:12px;padding:28px;border:1px solid var(--athena-border);display:none;">
+        <div id="detail-content"></div>
+      </div>
+
+      <!-- Pain points overlay legend -->
+      <div id="gap-legend" style="display:none;margin-top:24px;background:#fef3c7;border:1px solid #fcd34d;border-radius:12px;padding:24px;">
+        <div style="font-size:14px;font-weight:700;color:#92400e;margin-bottom:16px;">⚠️ The Manual Triage Gap — Where Referral Ready Plugs In</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+          <div style="background:white;border-radius:8px;padding:16px;border:1px solid #fcd34d;">
+            <div style="font-size:13px;font-weight:700;color:#92400e;margin-bottom:6px;">No structured completeness check</div>
+            <div style="font-size:12px;color:#78350f;">athenaOne files the referral but doesn't automatically tell you what's missing — demographics, imaging, diagnosis codes, insurance. Coordinator has to know what to look for.</div>
+          </div>
+          <div style="background:white;border-radius:8px;padding:16px;border:1px solid #fcd34d;">
+            <div style="font-size:13px;font-weight:700;color:#92400e;margin-bottom:6px;">Manual readiness review = bottleneck</div>
+            <div style="font-size:12px;color:#78350f;">The "Referral readiness review" step is 100% human. Every referral requires a coordinator to read, assess, and decide — 15–30 min of cognitive work per packet.</div>
+          </div>
+          <div style="background:white;border-radius:8px;padding:16px;border:1px solid #fcd34d;">
+            <div style="font-size:13px;font-weight:700;color:#92400e;margin-bottom:6px;">Outreach loop causes leakage</div>
+            <div style="font-size:12px;color:#78350f;">When info is missing, coordinators manually draft outreach to referring offices. Referrals stall, patients wait, and some fall through entirely — no automated escalation or aging alerts.</div>
+          </div>
+        </div>
+        <div style="margin-top:16px;padding:16px;background:var(--athena-light-green);border-radius:8px;border:1px solid #bbf7d0;">
+          <div style="font-size:13px;font-weight:700;color:var(--athena-dark-green);margin-bottom:4px;">✅ Referral Ready fills exactly this gap</div>
+          <div style="font-size:12px;color:var(--athena-dark-green);">We sit between athenaOne intake and the readiness review — automatically parsing, scoring, and generating outreach so coordinators only review, not investigate.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+.flow-node:hover { background: var(--athena-light-blue) !important; }
+.flow-node.selected { background: var(--athena-light-blue) !important; border-left: 3px solid var(--athena-blue); }
+.pain-node.selected { background: #fef3c7 !important; border-left: 3px solid #f59e0b; }
+</style>
+
+<script>
+const nodeData = {
+  n1: { title: "Referral Arrives", icon: "📨", phase: "Intake", pain: false, desc: "Referrals come in via fax, patient portal, direct message, or order — in any format, any structure. athenaOne accepts all of these through document/order intake.", gap: null },
+  n2: { title: "athenaOne Document Intake", icon: "🏥", phase: "Intake", pain: false, desc: "athenaOne ingests the referral and creates a document record. At this point the referral exists in the system but has not been reviewed or triaged.", gap: null },
+  n3: { title: "Patient Matching", icon: "👤", phase: "Intake", pain: false, desc: "athenaOne checks if the patient already exists. If not, a coordinator must create or match the record and collect demographics.", gap: null },
+  n4: { title: "Referral Readiness Review", icon: "📋", phase: "Manual Triage", pain: true, desc: "A coordinator manually reads the entire referral packet to assess whether it can be scheduled. This step has no AI assistance — it is 100% human cognitive work.", gap: "This is the primary bottleneck. 15–30 minutes of manual review per referral. No structured checklist. No auto-detection of missing fields. Referral Ready replaces this with an AI agent that completes this in under 30 seconds." },
+  n5: { title: "Complete Packet Check", icon: "❓", phase: "Manual Triage", pain: true, desc: "The coordinator determines if the packet is complete. There is no automated field-by-field completeness check — they rely on experience and memory to know what's required.", gap: "No structured data validation exists here. Coordinators miss things. Common gaps: missing ICD-10 code, no imaging attached, insurance unverified, referring NPI not confirmed. Referral Ready checks all of these automatically using Da Vinci DTR and FHIR data." },
+  n6: { title: "Outreach to Referring Office", icon: "📞", phase: "Manual Triage", pain: true, desc: "If the packet is incomplete, the coordinator drafts a follow-up message to the referring office requesting missing information. This is written manually, every time.", gap: "Drafting outreach is repetitive and time-consuming. If the referral stalls at this stage — no response, wrong contact info — there is no automated aging alert or escalation. Referral Ready generates the outreach draft instantly and flags stalled referrals." },
+  n7: { title: "Authorization Check", icon: "🔍", phase: "Authorization", pain: false, desc: "athenaOne's Authorization Determination Engine checks payer and service rules to determine if prior authorization is needed. This step is well-automated in athenaOne today.", gap: null },
+  n8: { title: "Submit to Payer", icon: "📤", phase: "Authorization", pain: false, desc: "If auth is required, the coordinator uses the Auth Worklist/Tracker to submit supporting documentation to the payer.", gap: null },
+  n9: { title: "Payer Decision", icon: "⚖️", phase: "Authorization", pain: false, desc: "Payer responds: Approved, Denied/Needs Review, or More Info Needed. If more info is needed, the missing information list includes demographics, insurance, NPI, diagnosis, notes, labs/imaging.", gap: null },
+  n10: { title: "Auth Stored", icon: "✅", phase: "Schedule", pain: false, desc: "Once approved, authorization data is stored in athenaOne — auth number, dates, visits, and units. The referral is now ready to schedule.", gap: null },
+  n11: { title: "Ready to Schedule", icon: "📅", phase: "Schedule", pain: false, desc: "The specialist visit is scheduled. At this point the referral journey is complete and the patient has an appointment.", gap: null },
+  n12: { title: "Appointment / Encounter", icon: "🏁", phase: "Schedule", pain: false, desc: "The appointment occurs and the encounter and claim workflow begins — fully within athenaOne's existing infrastructure.", gap: null },
+};
+
+let currentView = 'current';
+
+function showView(view) {
+  currentView = view;
+  const gapLegend = document.getElementById('gap-legend');
+  const btnCurrent = document.getElementById('btn-current');
+  const btnGap = document.getElementById('btn-gap');
+  const painNodes = document.querySelectorAll('.pain-node');
+
+  if (view === 'gap') {
+    gapLegend.style.display = 'block';
+    btnGap.style.background = '#dc2626';
+    btnGap.style.color = 'white';
+    btnCurrent.style.background = 'white';
+    btnCurrent.style.color = 'var(--athena-navy)';
+    painNodes.forEach(n => { n.style.boxShadow = '0 0 0 2px #f59e0b'; });
+  } else {
+    gapLegend.style.display = 'none';
+    btnCurrent.style.background = 'var(--athena-navy)';
+    btnCurrent.style.color = 'white';
+    btnGap.style.background = 'white';
+    btnGap.style.color = '#dc2626';
+    painNodes.forEach(n => { n.style.boxShadow = 'none'; });
+  }
+}
+
+function selectNode(id) {
+  // Clear all selections
+  Object.keys(nodeData).forEach(k => {
+    const el = document.getElementById(k);
+    if (el) { el.classList.remove('selected'); }
+  });
+
+  const el = document.getElementById(id);
+  if (el) el.classList.add('selected');
+
+  const data = nodeData[id];
+  const panel = document.getElementById('detail-panel');
+  const content = document.getElementById('detail-content');
+
+  const isPain = data.pain;
+  content.innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+      <span style="font-size:24px;">${data.icon}</span>
+      <div>
+        <div style="font-size:16px;font-weight:700;color:var(--text-primary);">${data.title}</div>
+        <div style="font-size:12px;color:var(--athena-mid-gray);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;">${data.phase}</div>
+      </div>
+      ${isPain ? '<span style="margin-left:auto;background:#fef3c7;color:#92400e;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;border:1px solid #fcd34d;">⚠️ Pain Point</span>' : '<span style="margin-left:auto;background:var(--athena-light-green);color:var(--athena-dark-green);font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;">✅ Works Well</span>'}
+    </div>
+    <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:${data.gap ? '16px' : '0'};">${data.desc}</p>
+    ${data.gap ? `<div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:16px;margin-top:8px;">
+      <div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;">💡 How Referral Ready Helps</div>
+      <p style="font-size:13px;color:#78350f;line-height:1.5;">${data.gap}</p>
+    </div>` : ''}
+  `;
+  panel.style.display = 'block';
+}
+</script>
+
+<!-- WORKFLOW -->
+<section class="how-section">
+  <div class="how-inner">
+    <div class="section-label">Workflow Transformation</div>
+    <h2 style="font-size:32px;font-weight:700;letter-spacing:-0.02em;margin-bottom:8px;">Before vs. After</h2>
+    <p style="color:var(--text-secondary);font-size:15px;">Same referral. Same coordinator. Completely different experience.</p>
+
+    <div class="workflow">
+      <div class="workflow-col before">
+        <h3>⏳ Without Referral Ready</h3>
+        <div class="workflow-step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Referral packet arrives</strong>Fax, email, or portal — unstructured, inconsistent</div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Manual review begins</strong>Coordinator reads through entire packet</div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-num">3</div>
+          <div class="step-text"><strong>Search for missing info</strong>Cross-reference insurance, imaging, labs manually</div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-num">4</div>
+          <div class="step-text"><strong>Determine routing</strong>Guess which specialty or provider is correct</div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-num">5</div>
+          <div class="step-text"><strong>Draft follow-up</strong>Write outreach email from scratch</div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-num">6</div>
+          <div class="step-text"><strong>15–30 min later</strong>Maybe schedulable. Maybe not.</div>
+        </div>
+      </div>
+
+      <div class="workflow-arrow">
+        <div class="arrow-line"></div>
+        <div class="arrow-badge">AI<br>Agent</div>
+        <div class="arrow-line-bottom"></div>
+      </div>
+
+      <div class="workflow-col after">
+        <h3>✅ With Referral Ready</h3>
+        <div class="workflow-step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Referral packet arrives</strong>Pasted or ingested into Referral Ready</div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>AI parses in seconds</strong>LLM extracts all key fields instantly</div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-num">3</div>
+          <div class="step-text"><strong>Gaps auto-detected</strong>Missing items flagged with zero manual search</div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-num">4</div>
+          <div class="step-text"><strong>Readiness score + routing</strong>Confidence score, urgency, specialty — all instant</div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-num">5</div>
+          <div class="step-text"><strong>Outreach draft ready</strong>Editable message generated, coordinator approves</div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-num">6</div>
+          <div class="step-text"><strong>&lt;30 seconds</strong>Schedulable or actioned. Every time.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW AI HELPS -->
+<section class="ai-section">
+  <div class="ai-inner">
+    <div class="section-label">How AI Is Actually Helping</div>
+    <h2 style="font-size:32px;font-weight:700;letter-spacing:-0.02em;margin-bottom:8px;">The agent loop, explained</h2>
+    <p style="color:var(--text-secondary);font-size:15px;margin-bottom:0;">Not magic. A structured reasoning pipeline on top of Azure OpenAI.</p>
+
+    <div class="ai-grid">
+      <div class="ai-steps">
+        <div class="ai-step">
+          <div class="ai-step-left">
+            <div class="ai-step-dot">1</div>
+            <div class="ai-step-line"></div>
+          </div>
+          <div class="ai-step-content">
+            <h4>Parse unstructured referral text</h4>
+            <p>LLM reads the raw referral — fax-style, free text, any format — and extracts structured fields.</p>
+            <code class="mono">Input: "Pt referred for chest pain eval, see attached" → Extracted: patient, diagnosis, urgency, provider</code>
+          </div>
+        </div>
+        <div class="ai-step">
+          <div class="ai-step-left">
+            <div class="ai-step-dot">2</div>
+            <div class="ai-step-line"></div>
+          </div>
+          <div class="ai-step-content">
+            <h4>Check completeness against requirements</h4>
+            <p>Agent cross-references extracted fields against Da Vinci DTR authorization requirements and FHIR coverage data.</p>
+            <code class="mono">Missing: ICD-10 code, imaging report, prior auth number</code>
+          </div>
+        </div>
+        <div class="ai-step">
+          <div class="ai-step-left">
+            <div class="ai-step-dot">3</div>
+            <div class="ai-step-line"></div>
+          </div>
+          <div class="ai-step-content">
+            <h4>Score readiness + route</h4>
+            <p>Generates a readiness classification, confidence score, urgency flag, and specialty routing recommendation.</p>
+            <code class="mono">Score: MISSING INFO · Confidence: 72% · Route: Cardiology</code>
+          </div>
+        </div>
+        <div class="ai-step">
+          <div class="ai-step-left">
+            <div class="ai-step-dot">4</div>
+          </div>
+          <div class="ai-step-content">
+            <h4>Generate outreach draft</h4>
+            <p>Produces an editable follow-up message to the referring office. Coordinator reviews and approves before any action is taken.</p>
+            <code class="mono">Draft: "Dear Dr. Kim's office, we are missing imaging results for..."</code>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:white;border-radius:12px;padding:32px;border:1px solid var(--athena-border);align-self:start;">
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--athena-mid-gray);margin-bottom:20px;">Model & Stack</div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div style="display:flex;justify-content:space-between;padding-bottom:16px;border-bottom:1px solid var(--athena-border);">
+            <span style="font-size:14px;color:var(--text-secondary);">LLM</span>
+            <span style="font-size:14px;font-weight:600;color:var(--text-primary);">Azure OpenAI GPT-4o</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding-bottom:16px;border-bottom:1px solid var(--athena-border);">
+            <span style="font-size:14px;color:var(--text-secondary);">Framework</span>
+            <span style="font-size:14px;font-weight:600;color:var(--text-primary);">Python + Flask</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding-bottom:16px;border-bottom:1px solid var(--athena-border);">
+            <span style="font-size:14px;color:var(--text-secondary);">Data</span>
+            <span style="font-size:14px;font-weight:600;color:var(--text-primary);">Synthea + FHIR + DTR</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding-bottom:16px;border-bottom:1px solid var(--athena-border);">
+            <span style="font-size:14px;color:var(--text-secondary);">Output format</span>
+            <span style="font-size:14px;font-weight:600;color:var(--text-primary);">Structured JSON</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <span style="font-size:14px;color:var(--text-secondary);">Human-in-loop</span>
+            <span style="font-size:14px;font-weight:600;color:var(--athena-dark-green);">✓ Always</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DATA -->
+<section class="data-section">
+  <div class="data-inner">
+    <div class="section-label">Data Sources</div>
+    <h2 style="font-size:32px;font-weight:700;letter-spacing:-0.02em;">Built on real healthcare data standards</h2>
+    <div class="data-grid">
+      <div class="data-card">
+        <div class="data-card-icon">🧬</div>
+        <div class="data-card-content">
+          <h4>Synthea Synthetic Patients</h4>
+          <p>Realistic patient records including diagnoses, medications, and clinical history — zero real PHI.</p>
+          <span class="tag">Patient History</span>
+        </div>
+      </div>
+      <div class="data-card">
+        <div class="data-card-icon">📄</div>
+        <div class="data-card-content">
+          <h4>CMS BCDA FHIR Files</h4>
+          <p>ExplanationOfBenefit, Patient, and Coverage-style files for insurance verification and eligibility.</p>
+          <span class="tag">Insurance & Coverage</span>
+        </div>
+      </div>
+      <div class="data-card">
+        <div class="data-card-icon">🏥</div>
+        <div class="data-card-content">
+          <h4>NPPES NPI Files</h4>
+          <p>Provider identifiers, specialties, and locations for referring physician verification.</p>
+          <span class="tag">Provider Verification</span>
+        </div>
+      </div>
+      <div class="data-card">
+        <div class="data-card-icon">✅</div>
+        <div class="data-card-content">
+          <h4>HL7 Da Vinci DTR</h4>
+          <p>Prior authorization requirements by procedure — used to check completeness against payer rules.</p>
+          <span class="tag">Authorization Requirements</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OUTCOMES -->
+<section class="outcomes-section">
+  <div class="outcomes-inner">
+    <div class="section-label">Expected Outcomes</div>
+    <h2>If this works at scale</h2>
+    <div class="outcomes-grid">
+      <div class="outcome-card">
+        <div class="outcome-number">97%</div>
+        <div class="outcome-label">Reduction in manual triage time per referral</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-number">3–5x</div>
+        <div class="outcome-label">More referrals processed per coordinator per day</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-number">↓ 0</div>
+        <div class="outcome-label">Incomplete referrals reaching the scheduling queue unseen</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-number">↑ $</div>
+        <div class="outcome-label">Reduced patient leakage and lost revenue from stalled referrals</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="trust-section">
+  <div class="trust-inner">
+    <div class="section-label">Trust & Transparency</div>
+    <h2 style="font-size:32px;font-weight:700;letter-spacing:-0.02em;">Responsible AI by design</h2>
+    <div class="trust-grid">
+      <div class="trust-item">
+        <div class="trust-icon">👁️</div>
+        <div class="trust-text">
+          <h4>Human always in the loop</h4>
+          <p>Every AI recommendation requires coordinator approval before any action is taken. No autonomous sending or scheduling.</p>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">📊</div>
+        <div class="trust-text">
+          <h4>Confidence scores shown</h4>
+          <p>The agent surfaces its confidence level on every analysis so coordinators know when to trust and when to double-check.</p>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">🔒</div>
+        <div class="trust-text">
+          <h4>Synthetic data only</h4>
+          <p>Built and demonstrated entirely on Synthea synthetic records and CMS public datasets — zero real patient PHI.</p>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">📝</div>
+        <div class="trust-text">
+          <h4>Explainable outputs</h4>
+          <p>Every missing-info flag and routing recommendation includes a plain-language reason — not a black box.</p>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">🛡️</div>
+        <div class="trust-text">
+          <h4>Fallback rules</h4>
+          <p>If Azure OpenAI is unreachable, the system falls back to deterministic rule-based analysis with a visible safety note.</p>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">✏️</div>
+        <div class="trust-text">
+          <h4>Editable before sending</h4>
+          <p>All outreach drafts are editable. Coordinators review and personalize every message before it leaves the system.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <div class="cta-text">
+      <h2>See it in action</h2>
+      <p>Watch an incomplete referral become a schedule-ready action in under 10 seconds.</p>
+    </div>
+    <a href="http://127.0.0.1:8000" class="cta-btn">Launch Live Demo →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <span class="green-dot"></span>
+    <span class="footer-text">Referral Ready · athenahealth AI Hackathon · BOS Tech Week 2026</span>
+  </div>
+  <div class="footer-right">Track 3 · Reduce Administrative Burden · Built with Azure OpenAI</div>
+</footer>
+
+</body>
+</html>
