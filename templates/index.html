@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Referral Ready — AI Intake Agent for Schedule-Ready Referrals</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-mark">RR</div>
+            <div class="brand-text">
+                <h1>Referral Ready</h1>
+                <p class="tagline">AI Intake Agent for Schedule-Ready Referrals · Hackathon Track 3</p>
+            </div>
+        </div>
+        <div class="status">
+            <span id="ai-status" class="status-dot status-dot--idle" title="AI status"></span>
+            <span id="ai-status-text">Idle</span>
+        </div>
+    </header>
+
+    <main class="grid">
+        <!-- Left column: referral list + free text -->
+        <section class="panel panel--list">
+            <h2>Incoming Referrals</h2>
+            <p class="muted">Synthetic data. No real PHI. Select a referral to analyze.</p>
+            <ul id="referral-list" class="referral-list">
+                <li class="referral-list__loading">Loading sample referrals…</li>
+            </ul>
+
+            <h3 class="freeform-heading">Or paste a referral</h3>
+            <textarea id="free-text" placeholder="Paste a referral packet here (synthetic data only)…"></textarea>
+            <button id="analyze-free" class="btn btn--primary">Analyze pasted referral</button>
+        </section>
+
+        <!-- Right column: results -->
+        <section class="panel panel--results">
+            <div id="empty-state" class="empty-state">
+                <h2>Select a referral to begin</h2>
+                <p>
+                    Referral Ready analyzes each incoming referral packet and tells the
+                    coordinator whether it is ready to schedule, what is missing, and drafts
+                    an outreach email to the referring office. Every result is reviewed by
+                    a human before any action is taken.
+                </p>
+                <ul class="empty-bullets">
+                    <li>🟢 <strong>Ready</strong> · everything needed to schedule is present.</li>
+                    <li>🟡 <strong>Missing Info</strong> · fixable with a quick outreach.</li>
+                    <li>🔴 <strong>Needs Review</strong> · urgent or critical items missing.</li>
+                </ul>
+            </div>
+
+            <article id="result" class="result hidden">
+                <header class="result__header">
+                    <div>
+                        <h2 id="result-patient" class="result__patient"></h2>
+                        <p id="result-specialty" class="result__specialty"></p>
+                    </div>
+                    <span id="readiness-badge" class="badge"></span>
+                </header>
+
+                <div class="result__meta">
+                    <div class="meta-card">
+                        <div class="meta-card__label">Confidence</div>
+                        <div class="meta-card__value"><span id="confidence-value">—</span>%</div>
+                    </div>
+                    <div class="meta-card">
+                        <div class="meta-card__label">Urgency</div>
+                        <div class="meta-card__value" id="urgency-value">—</div>
+                    </div>
+                    <div class="meta-card">
+                        <div class="meta-card__label">Source</div>
+                        <div class="meta-card__value" id="source-value">—</div>
+                    </div>
+                </div>
+
+                <div class="result__columns">
+                    <div class="result__column">
+                        <h3>Present in packet</h3>
+                        <ul id="present-list" class="check-list"></ul>
+                    </div>
+                    <div class="result__column">
+                        <h3>Missing or vague</h3>
+                        <ul id="missing-list" class="warn-list"></ul>
+                    </div>
+                </div>
+
+                <div class="next-action">
+                    <h3>Recommended next action</h3>
+                    <p id="next-action-text"></p>
+                </div>
+
+                <div class="email-block" id="email-block">
+                    <h3>Drafted follow-up email</h3>
+                    <p class="muted small">Editable. Nothing is sent without explicit human approval.</p>
+                    <textarea id="draft-email" rows="10"></textarea>
+                </div>
+
+                <div class="safety">
+                    <strong>Safety note:</strong>
+                    <span id="safety-note-text"></span>
+                </div>
+
+                <div class="checklist">
+                    <h3>Human approval checklist</h3>
+                    <label><input type="checkbox" class="approve-check" /> I reviewed the readiness score and urgency.</label>
+                    <label><input type="checkbox" class="approve-check" /> I reviewed the missing-info list.</label>
+                    <label><input type="checkbox" class="approve-check" /> I reviewed and edited the draft email if needed.</label>
+                    <label><input type="checkbox" class="approve-check" /> I confirm this referral is ready for the recommended next action.</label>
+                </div>
+
+                <div class="actions">
+                    <button id="approve-btn" class="btn btn--approve" disabled>Approve &amp; route</button>
+                    <button id="reject-btn" class="btn btn--reject">Reject</button>
+                    <button id="reset-btn" class="btn btn--ghost">Clear</button>
+                </div>
+
+                <div id="toast" class="toast hidden"></div>
+            </article>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <span>Track 3 — Reduce Administrative Burden</span>
+        <span>·</span>
+        <span>Synthetic data only · No real PHI</span>
+        <span>·</span>
+        <span>AI assists; humans approve every action.</span>
+    </footer>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
