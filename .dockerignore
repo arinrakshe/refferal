@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.pyc
+.git/
+.env
+filename.zip
+.sixth/
+hackathon-files/
+clean-files/
+synthea/sample.zip
+.DS_Store
+*.output
