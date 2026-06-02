@@ -2,7 +2,8 @@
 
 **AI intake agent that turns incoming specialist referrals into schedule-ready packets — with a human approving every step.**
 
-> 🏆 Built for the **Athenahealth Tech Week Hackathon** — Track 3: *Reduce Administrative Burden*.
+> 🏆 Built during the **Athenahealth AI for Healthcare Hackathon during #BostonTechWeek** — Track 3: *Reduce Administrative Burden*.
+> Won First Place - 🏆 Trusted Innovation Award — sponsored by Snowflake
 
 ---
 
