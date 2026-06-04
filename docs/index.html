@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Referral Ready — AI Intake Agent for Schedule-Ready Referrals</title>
+    <link rel="stylesheet" href="static/styles.css" />
+</head>
+<body>
+    <!-- ─────────────────────── TOPBAR ─────────────────────── -->
+    <header class="topbar">
+        <div class="topbar__brand">
+            <div class="topbar__mark">RR</div>
+            <div class="topbar__brand-text">
+                <div class="topbar__name">Referral Ready</div>
+                <div class="topbar__sub">AI Intake Agent · Track 3</div>
+            </div>
+        </div>
+
+        <div class="topbar__stats">
+            <div class="topstat topstat--primary">
+                <div class="topstat__icon" aria-hidden="true">⏱</div>
+                <div class="topstat__body">
+                    <div class="topstat__value">
+                        <span id="stats-minutes">0</span><span class="topstat__unit">min</span>
+                    </div>
+                    <div class="topstat__label">Time saved</div>
+                    <div id="stats-hours-sub" class="topstat__hint">0h 0m · 18 min/approval</div>
+                </div>
+            </div>
+            <div class="topstat">
+                <div class="topstat__icon topstat__icon--ready" aria-hidden="true">✓</div>
+                <div class="topstat__body">
+                    <div class="topstat__value"><span id="stats-approvals">0</span></div>
+                    <div class="topstat__label">Approved</div>
+                </div>
+            </div>
+            <div class="topstat">
+                <div class="topstat__icon topstat__icon--reject" aria-hidden="true">✕</div>
+                <div class="topstat__body">
+                    <div class="topstat__value"><span id="stats-rejects">0</span></div>
+                    <div class="topstat__label">Rejected</div>
+                </div>
+            </div>
+            <div class="topbar__status" title="Azure OpenAI status">
+                <span id="ai-status" class="status-dot status-dot--idle"></span>
+                <span id="ai-status-text">Idle</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ─────────────────────── SEARCH HERO ─────────────────────── -->
+    <section class="search-hero" id="search-panel">
+        <div class="search-hero__inner">
+            <form id="search-form" class="search-bar" autocomplete="off">
+                <span class="search-bar__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </span>
+                <input
+                    id="search-input"
+                    type="text"
+                    placeholder="Ask your referral queue — e.g. show me urgent cardiology referrals with missing labs"
+                    aria-label="Ask your referral queue"
+                />
+                <button type="button" id="search-clear" class="search-bar__clear hidden" aria-label="Clear search">×</button>
+                <button type="submit" id="search-send" class="search-bar__send" aria-label="Send query">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+                </button>
+            </form>
+            <div id="search-suggestions" class="search-hero__chips">
+                <span class="search-hero__chips-label">Try:</span>
+                <button type="button" class="search-chip">show me all urgent referrals</button>
+                <button type="button" class="search-chip">which patients are missing labs</button>
+                <button type="button" class="search-chip">who has leakage risk</button>
+                <button type="button" class="search-chip">find all cardiology referrals</button>
+                <button type="button" class="search-chip">who has been waiting more than 7 days</button>
+            </div>
+            <div id="search-result" class="search-result hidden">
+                <div class="search-result__head">
+                    <span class="search-result__count" id="search-count">0 matches</span>
+                    <button type="button" id="search-result-clear" class="btn btn--ghost btn--small">Clear filter</button>
+                </div>
+                <p id="search-explanation" class="search-result__explanation"></p>
+                <ul id="search-match-list" class="search-result__list"></ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─────────────────────── WORKSPACE GRID ─────────────────────── -->
+    <main class="workspace">
+
+        <!-- LEFT SIDEBAR -->
+        <aside class="workspace__sidebar">
+
+            <!-- Inbox card -->
+            <section class="card card--inbox">
+                <header class="card__head">
+                    <div>
+                        <h2 class="card__title">Inbox</h2>
+                        <p class="card__sub"><span id="inbox-count">5</span> incoming referrals · pre-analyzed</p>
+                    </div>
+                    <div class="card__totals" id="inbox-totals" aria-hidden="true">
+                        <span class="pip pip--ready"><span id="inbox-count-ready">0</span></span>
+                        <span class="pip pip--missing"><span id="inbox-count-missing">0</span></span>
+                        <span class="pip pip--review"><span id="inbox-count-review">0</span></span>
+                    </div>
+                </header>
+                <div class="queue-table-wrap">
+                    <table class="queue-table inbox-table">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Specialty</th>
+                                <th>Status</th>
+                                <th class="u-right">Urgency</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inbox-rows">
+                            <tr class="queue-loading">
+                                <td colspan="4">Pre-analyzing 5 referrals against patient charts… first load takes ~5s.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Aging card -->
+            <section class="card card--aging">
+                <header class="card__head">
+                    <div>
+                        <h2 class="card__title">Aging Dashboard</h2>
+                        <p class="card__sub">Sorted by days idle · 7-day leakage threshold</p>
+                    </div>
+                    <div class="card__totals" id="aging-totals" aria-hidden="true">
+                        <span class="pip pip--review"><span id="aging-count-red">0</span></span>
+                        <span class="pip pip--missing"><span id="aging-count-yellow">0</span></span>
+                        <span class="pip pip--ready"><span id="aging-count-green">0</span></span>
+                    </div>
+                </header>
+                <div class="queue-table-wrap">
+                    <table class="queue-table aging-table">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Specialty</th>
+                                <th class="u-right">Idle</th>
+                                <th>Risk</th>
+                            </tr>
+                        </thead>
+                        <tbody id="aging-rows">
+                            <tr class="queue-loading"><td colspan="4">Waiting for inbox analysis…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </aside>
+
+        <!-- RIGHT DETAIL -->
+        <section class="workspace__detail card">
+
+            <!-- Empty state -->
+            <div id="empty-state" class="empty-state">
+                <div class="empty-state__art" aria-hidden="true">
+                    <svg viewBox="0 0 64 64" width="64" height="64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="8" y="14" width="48" height="40" rx="4"></rect>
+                        <line x1="8" y1="24" x2="56" y2="24"></line>
+                        <line x1="16" y1="34" x2="48" y2="34"></line>
+                        <line x1="16" y1="42" x2="38" y2="42"></line>
+                    </svg>
+                </div>
+                <h2 class="empty-state__title">Select a referral to begin</h2>
+                <p class="empty-state__text">
+                    Click any row in the Inbox or Aging Dashboard to open the full triage.
+                    You'll see the patient chart, an A/B comparison of the AI analysis with
+                    and without history, the routing recommendation, missing items, and a
+                    drafted follow-up email — all reviewed by a human before any action.
+                </p>
+                <ul class="empty-state__legend">
+                    <li><span class="dot dot--ready"></span> Ready · everything needed to schedule</li>
+                    <li><span class="dot dot--missing"></span> Missing Info · fixable with a quick outreach</li>
+                    <li><span class="dot dot--review"></span> Needs Review · urgent or critical items missing</li>
+                </ul>
+                <div class="empty-state__freeform">
+                    <label for="free-text" class="freeform__label">Or paste a custom referral packet (synthetic only)</label>
+                    <textarea id="free-text" rows="3" placeholder="Paste a referral packet here to analyze it on the fly…"></textarea>
+                    <button id="analyze-free" class="btn btn--primary">Analyze pasted referral</button>
+                </div>
+            </div>
+
+            <!-- Result detail view -->
+            <article id="result" class="detail hidden">
+
+                <!-- 1. PATIENT INFO + CHART -->
+                <section class="detail-section detail-section--patient">
+                    <header class="detail-section__head">
+                        <span class="detail-section__step">1</span>
+                        <h3 class="detail-section__title">Patient Info</h3>
+                    </header>
+                    <div class="detail-header">
+                        <div>
+                            <h2 id="result-patient" class="detail-header__name"></h2>
+                            <p id="result-specialty" class="detail-header__sub"></p>
+                        </div>
+                        <span id="readiness-badge" class="badge"></span>
+                    </div>
+
+                    <section id="history-panel" class="history-panel hidden">
+                        <header class="history-panel__head">
+                            <h4>Patient chart on file</h4>
+                            <span id="history-id" class="history-panel__id"></span>
+                        </header>
+                        <div class="history-panel__meta">
+                            <span><strong>Age:</strong> <span id="history-age">—</span></span>
+                            <span><strong>Referring doctor:</strong> <span id="history-doctor">—</span></span>
+                            <span><strong>Insurance on file:</strong> <span id="history-insurance">—</span></span>
+                        </div>
+                        <div class="history-panel__grid">
+                            <div>
+                                <h5>Conditions</h5>
+                                <ul id="history-conditions" class="pill-list"></ul>
+                            </div>
+                            <div>
+                                <h5>Active medications</h5>
+                                <ul id="history-medications" class="pill-list"></ul>
+                            </div>
+                            <div class="history-panel__full">
+                                <h5>Recent visits</h5>
+                                <ul id="history-visits" class="visit-list"></ul>
+                            </div>
+                        </div>
+                    </section>
+                    <div id="no-history-banner" class="no-history hidden">
+                        No chart on file for this patient — treating as a new patient.
+                    </div>
+                </section>
+
+                <!-- 2. READINESS -->
+                <section class="detail-section detail-section--readiness">
+                    <header class="detail-section__head">
+                        <span class="detail-section__step">2</span>
+                        <h3 class="detail-section__title">Readiness</h3>
+                    </header>
+                    <div class="detail-meta">
+                        <div class="meta-card">
+                            <div class="meta-card__label">Confidence</div>
+                            <div class="meta-card__value"><span id="confidence-value">—</span>%</div>
+                        </div>
+                        <div class="meta-card">
+                            <div class="meta-card__label">Urgency</div>
+                            <div class="meta-card__value" id="urgency-value">—</div>
+                        </div>
+                        <div class="meta-card">
+                            <div class="meta-card__label">Source</div>
+                            <div class="meta-card__value meta-card__value--small" id="source-value">—</div>
+                        </div>
+                    </div>
+
+                    <section id="compare-panel" class="compare-panel hidden">
+                        <header class="compare-panel__head">
+                            <h4>Why patient history matters</h4>
+                            <span class="compare-panel__tag">A/B from GPT-5.4-mini</span>
+                        </header>
+                        <p class="compare-panel__caption">
+                            Both columns are real model calls on the same referral — the right column had the patient's chart attached.
+                        </p>
+                        <div class="compare-grid">
+                            <div class="compare-col compare-col--before">
+                                <div class="compare-col__head">Without chart context</div>
+                                <span id="cmp-before-badge" class="badge"></span>
+                                <dl class="compare-stats">
+                                    <div><dt>Urgency</dt><dd id="cmp-before-urgency">—</dd></div>
+                                    <div><dt>Confidence</dt><dd><span id="cmp-before-confidence">—</span>%</dd></div>
+                                </dl>
+                                <div class="compare-section">
+                                    <strong>Missing items flagged</strong>
+                                    <ul id="cmp-before-missing" class="warn-list"></ul>
+                                </div>
+                                <div class="compare-section">
+                                    <strong>Recommended next step</strong>
+                                    <p id="cmp-before-next" class="compare-next"></p>
+                                </div>
+                            </div>
+                            <div class="compare-col compare-col--after">
+                                <div class="compare-col__head">With chart context ✨</div>
+                                <span id="cmp-after-badge" class="badge"></span>
+                                <dl class="compare-stats">
+                                    <div><dt>Urgency</dt><dd id="cmp-after-urgency">—</dd></div>
+                                    <div><dt>Confidence</dt><dd><span id="cmp-after-confidence">—</span>%</dd></div>
+                                </dl>
+                                <div class="compare-section">
+                                    <strong>Missing items flagged</strong>
+                                    <ul id="cmp-after-missing" class="warn-list"></ul>
+                                </div>
+                                <div class="compare-section">
+                                    <strong>Recommended next step</strong>
+                                    <p id="cmp-after-next" class="compare-next"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="compare-delta" class="compare-delta hidden"></div>
+                    </section>
+                </section>
+
+                <!-- 3. ROUTING -->
+                <section class="detail-section detail-section--routing">
+                    <header class="detail-section__head">
+                        <span class="detail-section__step">3</span>
+                        <h3 class="detail-section__title">Routing</h3>
+                    </header>
+                    <section id="routing-card" class="routing-card hidden">
+                        <div class="routing-card__icon" aria-hidden="true">→</div>
+                        <div class="routing-card__body">
+                            <div class="routing-card__label">Routing recommendation</div>
+                            <p id="routing-text" class="routing-card__text"></p>
+                            <p class="routing-card__sub">
+                                Suggested by GPT-5.4-mini · final destination set by the coordinator on approval.
+                            </p>
+                        </div>
+                    </section>
+                </section>
+
+                <!-- 4. MISSING ITEMS -->
+                <section class="detail-section detail-section--items">
+                    <header class="detail-section__head">
+                        <span class="detail-section__step">4</span>
+                        <h3 class="detail-section__title">Missing Items</h3>
+                    </header>
+                    <div class="result__columns">
+                        <div class="result__column">
+                            <h4>Present in packet</h4>
+                            <ul id="present-list" class="check-list"></ul>
+                        </div>
+                        <div class="result__column">
+                            <h4>Missing or vague</h4>
+                            <ul id="missing-list" class="warn-list"></ul>
+                        </div>
+                    </div>
+                    <div class="next-action">
+                        <h4>Recommended next action</h4>
+                        <p id="next-action-text"></p>
+                    </div>
+                </section>
+
+                <!-- 5. DRAFT EMAIL -->
+                <section class="detail-section detail-section--email" id="email-block">
+                    <header class="detail-section__head">
+                        <span class="detail-section__step">5</span>
+                        <h3 class="detail-section__title">Draft Email</h3>
+                    </header>
+                    <p class="muted small">Editable. Nothing is sent without explicit human approval.</p>
+                    <textarea id="draft-email" rows="10"></textarea>
+                </section>
+
+                <!-- 6. APPROVAL CHECKLIST -->
+                <section class="detail-section detail-section--approval">
+                    <header class="detail-section__head">
+                        <span class="detail-section__step">6</span>
+                        <h3 class="detail-section__title">Approval Checklist</h3>
+                    </header>
+
+                    <div class="safety">
+                        <strong>Safety note:</strong>
+                        <span id="safety-note-text"></span>
+                    </div>
+
+                    <div class="checklist">
+                        <label><input type="checkbox" class="approve-check" /> I reviewed the readiness score and urgency.</label>
+                        <label><input type="checkbox" class="approve-check" /> I reviewed the missing-info list.</label>
+                        <label><input type="checkbox" class="approve-check" /> I reviewed and edited the draft email if needed.</label>
+                        <label><input type="checkbox" class="approve-check" /> I confirm this referral is ready for the recommended next action.</label>
+
+                        <div class="coord-notes">
+                            <label class="coord-notes__label" for="coord-notes-input">Coordinator notes (optional)</label>
+                            <textarea id="coord-notes-input" rows="3" placeholder="Add a note for the audit log — e.g. 'Confirmed with Dr. Patel's office by phone' or 'Patient called back, callback scheduled.'"></textarea>
+                            <p class="coord-notes__hint">Saved with the approval event and shown in the activity log below.</p>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button id="approve-btn" class="btn btn--approve" disabled>Approve &amp; route</button>
+                        <button id="reject-btn" class="btn btn--reject">Reject</button>
+                        <button id="reset-btn" class="btn btn--ghost">Clear</button>
+                    </div>
+
+                    <div id="toast" class="toast hidden"></div>
+                </section>
+
+            </article>
+        </section>
+    </main>
+
+    <!-- ─────────────────────── ACTIVITY BAR ─────────────────────── -->
+    <section class="activity-bar">
+        <header class="activity-bar__head">
+            <div>
+                <h2 class="card__title">Approval activity</h2>
+                <p class="card__sub">Every approve / reject event is recorded with the coordinator's notes.</p>
+            </div>
+            <div id="log-empty-pill" class="activity-pill">No actions yet</div>
+        </header>
+        <ul id="approval-log" class="approval-log">
+            <li class="approval-log__empty">When you approve or reject a referral, it shows up here.</li>
+        </ul>
+    </section>
+
+    <footer class="footer">
+        <span>Track 3 · Reduce Administrative Burden</span>
+        <span class="footer__dot">·</span>
+        <span>Synthetic Synthea data · no real PHI</span>
+        <span class="footer__dot">·</span>
+        <span>AI assists; humans approve every action.</span>
+    </footer>
+
+    <script src="static/static-shim.js"></script>
+    <script src="static/app.js"></script>
+</body>
+</html>
